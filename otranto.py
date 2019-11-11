@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
+import sys
 
-source_file="texts/Otranto.txt"
-#source_file="texts/half.txt"
+HALF   = {
+        'source': 'texts/Otranto.txt',
+        'op': lambda x: x // 2
+        }
+DOUBLE = {
+        'source': 'texts/half.txt',
+        'op': lambda x: x * 2
+        }
 
 
 def numbersystem(s1, s2=''):
@@ -30,15 +37,13 @@ def int2words(i, words):
         output.append(words[w])
     return ' '.join(output)
 
+if __name__ == '__main__':
 
-with open(source_file, 'r') as f:
-    text = f.read()
-    vocab = numbersystem(text)
-    #print(len(vocab))
-    full = words2int(text, vocab)
-
-    half = int2words(full//2, vocab)
-    #double = int2words(full*2, vocab)
-    
-    print(half)
-    #print(double)
+    target = DOUBLE if sys.argv[1] == 'double' else HALF
+    with open(target['source'], 'r') as f:
+        text = f.read()
+        vocab = numbersystem(text)
+        #print(len(vocab))
+        full = words2int(text, vocab)
+        result = int2words(target['op'](full), vocab)
+        print(result)
