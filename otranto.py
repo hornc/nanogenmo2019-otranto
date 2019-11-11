@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 source_file="texts/Otranto.txt"
-source_file="texts/half.txt"
+#source_file="texts/half.txt"
 
 
 def numbersystem(s1, s2=''):
@@ -37,8 +37,8 @@ with open(source_file, 'r') as f:
     #print(len(vocab))
     full = words2int(text, vocab)
 
-    #half = int2words(full//2, vocab)
-    double = int2words(full*2, vocab)
+    half = int2words(full//2, vocab)
+    #double = int2words(full*2, vocab)
     
-    #print(half)
-    print(double)
+    print(half)
+    #print(double)
