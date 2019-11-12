@@ -17,20 +17,36 @@ class Lexnum():
         self.radix = len(self.lexicon)
 
     def int(self, s):
-        """ Returns an int based on an input string and a list of words
-            representing a number system.
         """
-        return sum([self.lexicon.index(w) * (self.radix ** i) for i,w in enumerate(s.split(' '))])
+        Returns an int based on an input string and a list of words
+        representing a number system.
+        """
+        return sum([self.lexicon.index(w) * p for w,p in self.word_power(s)])
 
     def lex(self, i):
-        """ inverse of above """
-        output = []
+        """
+        Returns a full lex string representing integer i.
+        """
+        return ' '.join([d for d in self.nextlex(i)])
+
+    def nextlex(self, i):
+        """
+        Generator which yields the next lex digit of integer i.
+        """
         remainder = i
         while remainder > 0:
             w = remainder % self.radix
             remainder = remainder // self.radix
-            output.append(self.lexicon[w])
-        return ' '.join(output)
+            yield self.lexicon[w]
+
+    def word_power(self, s):
+        words = s.split(' ')
+        i = 0
+        p = 1
+        while i < (len(words) - 1):
+            p *= self.radix
+            i += 1
+            yield words[i], p
 
 
 if __name__ == '__main__':
@@ -40,5 +56,6 @@ if __name__ == '__main__':
         text = f.read()
         vocab = Lexnum(text)
         full = vocab.int(text)
-        result = vocab.lex(target['op'](full))
-        print(result)
+        result = vocab.nextlex(target['op'](full))
+        for word in result:
+            print(word + ' ', end='')
