@@ -10,40 +10,52 @@ DOUBLE = {
         'op': lambda x: x * 2
         }
 
+class Lexnum():
+    def __init__(self, s):
+        words = set(s.split(' '))
+        self.lexicon = list(sorted(words))
+        self.radix = len(self.lexicon)
 
-def numbersystem(s1, s2=''):
-    words = set(s1.split(' '))
-    words.update(set(s2.split(' ')))
-    return list(sorted(words))
-
-
-def words2int(s, words):
-    """ Returns an int based on an input string and a list of words
+    def int(self, s):
+        """
+        Returns an int based on an input string and a list of words
         representing a number system.
-    """
-    radix = len(words)
-    return sum([words.index(w) * (radix ** i) for i,w in enumerate(s.split(' '))])
+        """
+        return sum([self.lexicon.index(w) * p for w,p in self.word_power(s)])
 
+    def lex(self, i):
+        """
+        Returns a full lex string representing integer i.
+        """
+        return ' '.join([d for d in self.nextlex(i)])
 
-def int2words(i, words):
-    """ inverse of above """
-    radix = len(words)
-    output = []
-    remainder = i
-    while remainder > 0:
-        w = remainder % radix
-        remainder = remainder // radix
-        #output.append("%d:%s" % (w, words[w]))
-        output.append(words[w])
-    return ' '.join(output)
+    def nextlex(self, i):
+        """
+        Generator which yields the next lex digit of integer i.
+        """
+        remainder = i
+        while remainder > 0:
+            w = remainder % self.radix
+            remainder = remainder // self.radix
+            yield self.lexicon[w]
+
+    def word_power(self, s):
+        words = s.split(' ')
+        i = 0
+        p = 1
+        while i < (len(words) - 1):
+            p *= self.radix
+            i += 1
+            yield words[i], p
+
 
 if __name__ == '__main__':
 
     target = DOUBLE if sys.argv[1] == 'double' else HALF
     with open(target['source'], 'r') as f:
         text = f.read()
-        vocab = numbersystem(text)
-        #print(len(vocab))
-        full = words2int(text, vocab)
-        result = int2words(target['op'](full), vocab)
-        print(result)
+        vocab = Lexnum(text)
+        full = vocab.int(text)
+        result = vocab.nextlex(target['op'](full))
+        for word in result:
+            print(word + ' ', end='')
