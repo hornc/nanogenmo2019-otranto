@@ -64,5 +64,9 @@ if __name__ == '__main__':
         vocab = Lexnum(text)
         full = vocab.int(text)
         result = vocab.nextlex(target['op'](full))
+        separator = ''
         for word in result:
-            print(word + ' ', end='')
+            print(separator + word, end='')
+            if separator == '':
+                separator = ' '
+        print('')
