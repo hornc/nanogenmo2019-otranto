@@ -46,8 +46,12 @@ class Lexnum():
         words = s.split(' ')
         i = 0
         p = 1
+        least_sig = True
         while i < len(words):
-            p *= self.radix if i > 0 else 1
+            if not least_sig:
+                p *= self.radix
+            else:
+                least_sig = False
             i += 1
             yield self.lexicon.index(words[i-1]), p
 
