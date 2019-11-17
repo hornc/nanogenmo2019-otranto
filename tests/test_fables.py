@@ -3,7 +3,8 @@ from otranto import Lexnum
 class TestFables:
     kafka = '''"Alas," said the mouse, "the world gets smaller every day. At first it was so wide that I ran along and was happy to see walls appearing to my right and left, but these high walls converged so quickly that I’m already in the last room, and there in the corner is the trap into which I must run."
 
-"But you’ve only got to run the other way," said the cat, and ate it.'''
+"But you’ve only got to run the other way," said the cat, and ate it.
+'''
 
     aesop = '''A Lion lay asleep in the forest, his great head resting on his paws. A timid little Mouse came upon him unexpectedly, and in her fright and haste to get away, ran across the Lion's nose. Roused from his nap, the Lion laid his huge paw angrily on the tiny creature to kill her.
 
@@ -13,7 +14,8 @@ The Lion was much amused to think that a Mouse could ever help him. But he was g
 
 Some days later, while stalking his prey in the forest, the Lion was caught in the toils of a hunter's net. Unable to free himself, he filled the forest with his angry roaring. The Mouse knew the voice and quickly found the Lion struggling in the net. Running to one of the great ropes that bound him, she gnawed it until it parted, and soon the Lion was free.
 
-"You laughed when I said I would repay you," said the Mouse. "Now you see that even a Mouse can help a Lion."'''
+"You laughed when I said I would repay you," said the Mouse. "Now you see that even a Mouse can help a Lion."
+'''
 
     def test_kafka_vocab(self):
         vocab = Lexnum(self.kafka)
@@ -49,9 +51,8 @@ Some days later, while stalking his prey in the forest, the Lion was caught in t
         assert k & 1 == 0
 
         halved = vocab.lex(k // 2)
-        print("### Half A Little Fable:\n")
-        print(halved)
-        print("\n")
+        print('### Half A Little Fable:\n')
+        print(halved, '\n')
 
         d = 2 * vocab.int(halved)
         redoubled = vocab.lex(d)
@@ -59,6 +60,36 @@ Some days later, while stalking his prey in the forest, the Lion was caught in t
         assert d == k
 
         print("### Half A Little Fable, redoubled:\n")
-        print(redoubled)
-        print("\n")
+        print(redoubled, '\n')
         assert redoubled == self.kafka
+
+    def test_fable_to_powers(self):
+        vocab = Lexnum(self.kafka)
+        k = vocab.int(self.kafka)
+        out5 = vocab.lex(k ** 5)
+        print('### A Little Fable to the power of 5:\n')
+        print(out5, '\n')
+        out6 = vocab.lex(k ** 6)
+        print('### A Little Fable to the power of 6:\n')
+        print(out6, '\n')
+        assert out5.startswith('"Alas," "Alas," "Alas," "Alas," "Alas," is run."')  # 5 x 0-symbol
+        assert out6.startswith('"Alas," "Alas," "Alas," "Alas," "Alas," "Alas,"')   # 6 x 0-symbol
+
+    def test_vocab_expansion(self):
+        vocab = Lexnum(self.kafka)
+        k = vocab.int(self.kafka)
+        qbf = 'The quick brown fox jumps over the lazy dog.'
+        vocab2 = Lexnum(self.kafka + ' ' + qbf)
+        out = vocab2.lex(k)
+        print('### A Little Fable base converted into a vocabulary expansion with "%s"\n' % qbf)
+        print(out, '\n')
+        assert k == vocab2.int(out)
+
+    def test_kafka_aesop_product(self):
+        vocab = Lexnum(self.kafka + ' ' + self.aesop)
+        k = vocab.int(self.kafka)
+        a = vocab.int(self.aesop)
+        out = vocab.lex(a * k)
+        print("### Product of Kafka's Little Fable and an Aesop's Fable:\n")
+        print(out, '\n')
+        assert out.startswith('"Alas," I away, along that "Please poor wide it amused laid walls net. mouse, paws. prey soon Roused Roused there think go.')
