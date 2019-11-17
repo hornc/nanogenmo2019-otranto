@@ -21,7 +21,7 @@ class Lexnum():
         Returns an int based on an input string and a list of words
         representing a number system.
         """
-        return sum([self.lexicon.index(w) * p for w,p in self.word_power(s)])
+        return sum([v * p for v,p in self.word_power(s)])
 
     def lex(self, i):
         """
@@ -41,7 +41,7 @@ class Lexnum():
 
     def word_power(self, s):
         """
-        Given a input string of word symbols, returns a generator (word-symbol, multiplier).
+        Given a input string of word symbols, returns a generator (symbol-value, multiplier).
         """
         words = s.split(' ')
         i = 0
@@ -49,7 +49,7 @@ class Lexnum():
         while i < len(words):
             p *= self.radix if i > 0 else 1
             i += 1
-            yield words[i-1], p
+            yield self.lexicon.index(words[i-1]), p
 
 
 if __name__ == '__main__':

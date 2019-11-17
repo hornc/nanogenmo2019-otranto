@@ -5,12 +5,12 @@ class TestBaseTen():
     vocab = Lexnum(text)
 
     def test_word_power(self):
-        gen = self.vocab.word_power("3_three 2_two")
+        gen = self.vocab.word_power('3_three 2_two')
         a = [(w, p) for w, p in gen]
         assert len(a) == 2
-        print(a)
-        assert a[0][1] == 1
-        assert a[1][1] == 10
+        assert [1, 10] == [x[1] for x in a]  # multipliers
+        assert [3,  2] == [x[0] for x in a]  # symbol values
+        assert self.vocab.int('3_three 2_two') == 23
 
     def test_lexnum(self):
         a = self.vocab.int(self.text)
