@@ -40,13 +40,16 @@ class Lexnum():
             yield self.lexicon[w]
 
     def word_power(self, s):
+        """
+        Given a input string of word symbols, returns a generator (word-symbol, multiplier).
+        """
         words = s.split(' ')
         i = 0
         p = 1
-        while i < (len(words) - 1):
-            p *= self.radix
+        while i < len(words):
+            p *= self.radix if i > 0 else 1
             i += 1
-            yield words[i], p
+            yield words[i-1], p
 
 
 if __name__ == '__main__':
