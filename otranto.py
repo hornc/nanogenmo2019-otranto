@@ -58,7 +58,7 @@ class Lexnum():
 
 if __name__ == '__main__':
 
-    target = DOUBLE if sys.argv[1] == 'double' else HALF
+    target = DOUBLE if len(sys.argv) > 1 and sys.argv[1] == 'double' else HALF
     with open(target['source'], 'r') as f:
         text = f.read()
         vocab = Lexnum(text)
